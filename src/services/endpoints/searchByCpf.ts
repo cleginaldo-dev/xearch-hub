@@ -10,7 +10,7 @@ type FindCompleteByCpf = (cpf: string) => Promise<FindCompleteCpfType>
 
 export const searchByCpfComplete: FindCompleteByCpf = async cpf => {
   const { data: response } = await api.get<FindCompleteCpfType>(`cpf/${getOnlyNumbers(cpf)}`, {
-    params: { type: 'complete' },
+    params: { type: 'complete', v: 1 },
   })
   const formattedResponse = {
     ...response,
@@ -28,7 +28,7 @@ type FindCnsByCpf = (cpf: string) => Promise<FindCnsByCpfType>
 
 export const searchCnsByCpf: FindCnsByCpf = async cpf => {
   const { data: response } = await api.get<FindCnsByCpfType>(`cpf/${getOnlyNumbers(cpf)}`, {
-    params: { type: 'cns' },
+    params: { type: 'cns', v: 1 },
   })
   const formattedResponse = {
     ...response,
@@ -36,8 +36,11 @@ export const searchCnsByCpf: FindCnsByCpf = async cpf => {
       created_at: format(new Date(), `dd/MM/yyyy`),
       cadsus: {
         ...response.data.cadsus,
+        cns_url: response.data.cadsus.cartao_cns
+          ? `https://api.xearch.pro${response.data.cadsus.cartao_cns}`
+          : '',
         cpf: setMaskCpf(response.data.cadsus.cpf),
-        data_nascimento: format(new Date(response.data.cadsus.data_nascimento), `dd/MM/yyyy`),
+        data_nascimento: response.data.cadsus.data_nascimento || '',
       } as FindCnsByCpfType['data']['cadsus'],
     } as FindCnsByCpfType['data'],
   } as FindCnsByCpfType
@@ -48,8 +51,9 @@ type FindSimpleByCpf = (cpf: string) => Promise<FindSimpleCpfType>
 
 export const searchByCpfSimple: FindSimpleByCpf = async cpf => {
   const { data: response } = await api.get<FindSimpleCpfType>(`cpf/${getOnlyNumbers(cpf)}`, {
-    params: { type: 'simple' },
+    params: { type: 'simple', v: 1 },
   })
+  if (response.data.success === false) throw new Error(response.data.message)
   const formattedResponse = {
     ...response,
     data: {
@@ -65,11 +69,14 @@ export const searchByCpfSimple: FindSimpleByCpf = async cpf => {
 type FindDataCpfBySpc = (cpf: string) => Promise<CpfResponseBySpcType>
 
 export const searchDataCpfBySpc: FindDataCpfBySpc = async cpf => {
-  const { data: response } = await api.get<CpfResponseBySpcType>(`spc/${getOnlyNumbers(cpf)}`)
+  const { data: response } = await api.get<CpfResponseBySpcType>(`spc/${getOnlyNumbers(cpf)}`, {
+    params: { v: 1 },
+  })
   const formattedResponse = {
     ...response,
     data: {
       ...response.data,
+      dataConsulta: format(new Date(), `dd/MM/yyyy 'às' HH:mm:ss`),
     },
   } as CpfResponseBySpcType
 

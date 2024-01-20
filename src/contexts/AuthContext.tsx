@@ -1,11 +1,13 @@
+/* eslint-disable import/no-mutable-exports */
 /* eslint-disable react/jsx-no-constructed-context-values */
 
 'use client'
 
 import { useRouter } from 'next/navigation'
-import React, { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { Children } from '.'
+import { toastError } from '../components/Notification/Notifications'
 import { api } from '../services/api'
 
 interface SignInRequest {
@@ -33,16 +35,20 @@ interface AuthContextData {
   user: UserType
   signIn: (data: SignInRequest) => Promise<void>
   signOut: () => void
+  isLoading: boolean
 }
 
-const localStorageKeys = {
+export const localStorageKeys = {
   token: '@xearch:token',
   user: '@xearch:user',
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
+export let authChanel: BroadcastChannel
+
 export default function AuthProvider({ children }: Children) {
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const [data, setData] = useState<SignInResponse>(() => {
     if (typeof window !== 'undefined') {
@@ -59,27 +65,54 @@ export default function AuthProvider({ children }: Children) {
   })
 
   async function signIn({ doc, password }: SignInRequest) {
-    const response = await api.post<UserType>('/login', { doc, password })
+    setIsLoading(true)
+    try {
+      const response = await api.post<UserType>('/login', { doc, password })
 
-    const user = response.data
-    const { token } = user
+      const user = response.data
+      const { token } = user
 
-    localStorage.setItem(localStorageKeys.token, token)
-    localStorage.setItem(localStorageKeys.user, JSON.stringify(user))
+      localStorage.setItem(localStorageKeys.token, token)
+      localStorage.setItem(localStorageKeys.user, JSON.stringify(user))
 
-    api.defaults.headers.authorization = `Bearer ${token}`
-    router.push('/home')
+      api.defaults.headers.authorization = `Bearer ${token}`
+      router.push('/home')
 
-    setData({ token, user })
+      setData({ token, user })
+      authChanel.postMessage('signIn')
+    } catch (error) {
+      const err = error as any
+      toastError(err.response.data.error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   function signOut() {
+    setIsLoading(true)
     localStorage.removeItem(localStorageKeys.token)
     localStorage.removeItem(localStorageKeys.user)
-
+    authChanel.postMessage('signOut')
     setData({} as SignInResponse)
     router.push('/')
+    setIsLoading(false)
   }
+
+  useEffect(() => {
+    authChanel = new BroadcastChannel('auth')
+    authChanel.onmessage = message => {
+      switch (message.data) {
+        case 'signOut':
+          router.push('/')
+          break
+        case 'signIn':
+          router.push('/home')
+          break
+        default:
+          break
+      }
+    }
+  }, [router])
 
   return (
     <AuthContext.Provider
@@ -87,6 +120,7 @@ export default function AuthProvider({ children }: Children) {
         user: data.user,
         signIn,
         signOut,
+        isLoading,
       }}
     >
       {children}

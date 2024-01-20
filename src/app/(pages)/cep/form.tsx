@@ -36,6 +36,7 @@ export function Form() {
           setAddress(null)
           form.setValues({ cep: '' })
         }}
+        pageTitle="CEP"
       >
         <MaskInput
           mask="99.999-999"
@@ -47,7 +48,7 @@ export function Form() {
         />
       </ContainerForm>
 
-      {isLoading ? <SkeletonCepCard /> : address && <FindAddressByCepCard address={address} />}
+      {isLoading ? <SkeletonCepCard /> : <FindAddressByCepCard address={address} />}
     </>
   )
 }

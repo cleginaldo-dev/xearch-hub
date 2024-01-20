@@ -1,14 +1,15 @@
+import { NotFoundRegister } from '@/src/components/form'
 import { IconToCopyText } from '@/src/components/IconToCopyText'
 import classes from '@/src/global/style/Cards.module.css'
 import { FindByNameType } from '@/src/services/types'
-import { Text, Card, SimpleGrid, Container, rem, Flex, Skeleton } from '@mantine/core'
+import { Card, Container, Flex, rem, SimpleGrid, Skeleton, Text } from '@mantine/core'
 import { IconUser } from '@tabler/icons-react'
 
 type CardPros = {
   people: FindByNameType
 }
 
-export function CardSkeleton() {
+export function CardsSkeletonUsers() {
   const person = [1, 2, 3, 4]
   return (
     <Container size="lg" py="xl" className={classes.container}>
@@ -50,6 +51,7 @@ export function CardSkeleton() {
 }
 
 export function FindByNameCard({ people }: CardPros) {
+  if (people?.data?.length === 0) return <NotFoundRegister />
   return (
     <Container size="lg" py="xl" className={classes.container}>
       <SimpleGrid cols={{ base: 1, md: 2 }} spacing="md">

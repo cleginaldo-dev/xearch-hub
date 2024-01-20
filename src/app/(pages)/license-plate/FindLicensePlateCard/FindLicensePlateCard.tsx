@@ -1,7 +1,7 @@
 import { IconToCopyText } from '@/src/components/IconToCopyText'
 import classes from '@/src/global/style/Cards.module.css'
 import { FindByLicensePlateType } from '@/src/services/types'
-import { Text, Card, SimpleGrid, Container, Flex, Skeleton, Divider, Title } from '@mantine/core'
+import { Card, Container, Divider, Flex, SimpleGrid, Skeleton, Text, Title } from '@mantine/core'
 
 type CardPros = {
   data: FindByLicensePlateType
@@ -55,7 +55,9 @@ export function FindLicensePlateCard({ data: { data } }: CardPros) {
 
         {/* DADOS PRINCIPAIS */}
         <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-          <Title ta="center">DADOS DO VEÍCULO</Title>
+          <Title className={classes.title} ta="center">
+            DADOS DO VEÍCULO
+          </Title>
         </SimpleGrid>
 
         <Divider mt="md" mb={20} />
@@ -235,7 +237,7 @@ export function FindLicensePlateCard({ data: { data } }: CardPros) {
             <Flex mt="md">
               <IconToCopyText text={data.estado} />
               <Text mx="5" className={classes.cardTitle}>
-                Cidade:
+                Estado:
               </Text>
               <Text className={classes.cardTitle}>{data.estado}</Text>
             </Flex>

@@ -3,7 +3,7 @@ import { IconToCopyText } from '@/src/components/IconToCopyText'
 import classes from '@/src/global/style/Cards.module.css'
 import { FindCompleteCpfType } from '@/src/services/types'
 import parseCurrency from '@/src/services/utils/parseCurrency'
-import { Text, Card, SimpleGrid, Container, Flex, Title, Divider } from '@mantine/core'
+import { Card, Container, Divider, Flex, SimpleGrid, Text, Title } from '@mantine/core'
 
 type CardPros = {
   data: FindCompleteCpfType
@@ -21,7 +21,9 @@ export function CompleteCpfCard({ data }: CardPros) {
 
         {/* DADOS PRINCIPAIS */}
         <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-          <Title ta="center">DADOS PRINCIPAIS</Title>
+          <Title className={classes.title} ta="center">
+            DADOS PRINCIPAIS
+          </Title>
         </SimpleGrid>
 
         <Divider mt="md" mb={20} />
@@ -184,13 +186,13 @@ export function CompleteCpfCard({ data }: CardPros) {
             </Flex>
           )}
 
-          {data.data.score && (
+          {data.data.score >= 0 && (
             <Flex mt="md">
-              <IconToCopyText text={data.data.score} />
+              <IconToCopyText text={String(data.data.score)} />
               <Text mx="5" className={classes.cardTitle}>
                 Score Serasa:
               </Text>
-              <Text className={classes.cardContent}>{data.data.score}</Text>
+              <Text className={classes.cardContent}>{String(data.data.score)}</Text>
             </Flex>
           )}
 
@@ -239,7 +241,9 @@ export function CompleteCpfCard({ data }: CardPros) {
         {data.data.enderecos && data.data.enderecos.length > 0 && (
           <>
             <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-              <Title ta="center">ENDEREÇOS</Title>
+              <Title className={classes.title} ta="center">
+                ENDEREÇOS
+              </Title>
             </SimpleGrid>
 
             <Divider mt="md" mb={20} />
@@ -334,7 +338,9 @@ export function CompleteCpfCard({ data }: CardPros) {
         {data.data.telefones && data.data.telefones.length > 0 && (
           <>
             <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-              <Title ta="center">TELEFONES</Title>
+              <Title className={classes.title} ta="center">
+                TELEFONES
+              </Title>
             </SimpleGrid>
 
             <Divider mt="md" mb={20} />
@@ -367,7 +373,9 @@ export function CompleteCpfCard({ data }: CardPros) {
         {data.data.familiares && data.data.familiares.length > 0 && (
           <>
             <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-              <Title ta="center">FAMILIARES</Title>
+              <Title className={classes.title} ta="center">
+                FAMILIARES
+              </Title>
             </SimpleGrid>
 
             <Divider mt="md" mb={20} />
@@ -425,7 +433,9 @@ export function CompleteCpfCard({ data }: CardPros) {
         {data.data.vizinhos && data.data.vizinhos.length > 0 && (
           <>
             <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-              <Title ta="center">VIZINHOS</Title>
+              <Title className={classes.title} ta="center">
+                VIZINHOS
+              </Title>
             </SimpleGrid>
 
             <Divider mt="md" mb={20} />
@@ -436,11 +446,9 @@ export function CompleteCpfCard({ data }: CardPros) {
                   <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1" key={i.id}>
                     {i.nome && (
                       <>
-                        <Flex mt="md">
+                        <Flex align="center">
                           <IconToCopyText text={i.nome} />
-
-                          <Title fz="md" ta="center" mx="5" className={classes.cardTitle}>
-                            VIZINHO{' '}
+                          <Title fz="md" ta="center" mx="5" className={classes.h2}>
                             {data.data.vizinhos &&
                               data.data.vizinhos.length > 0 &&
                               data?.data?.vizinhos?.indexOf(i) + 1}
@@ -461,7 +469,9 @@ export function CompleteCpfCard({ data }: CardPros) {
         {data.data.empresas && data.data.empresas.length > 0 && (
           <>
             <SimpleGrid cols={{ base: 1, md: 1 }} spacing="1">
-              <Title ta="center">EMPRESAS</Title>
+              <Title className={classes.title} ta="center">
+                EMPRESAS
+              </Title>
             </SimpleGrid>
 
             <Divider mt="md" mb={20} />

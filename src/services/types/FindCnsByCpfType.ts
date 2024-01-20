@@ -1,12 +1,13 @@
-interface Data {
+export interface Data {
   success: boolean
   created_at: string
   cadsus: Cadsus
 }
-interface Cadsus {
+export interface Cadsus {
   cpf: string
   cns: string
   cartao_cns: string
+  cns_url: string
   nome: string
   data_nascimento: string
   idade: number

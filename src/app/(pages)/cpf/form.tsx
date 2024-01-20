@@ -3,7 +3,7 @@
 import { CnsByCpfCard } from '@/src/app/(pages)/cpf/FindByCpfCards/CnsByCpfCard'
 import { CompleteCpfCard } from '@/src/app/(pages)/cpf/FindByCpfCards/CompleteCpfCard'
 import { SimpleCpfCard } from '@/src/app/(pages)/cpf/FindByCpfCards/SimpleCpfCard'
-import { CardSkeletonCpf } from '@/src/app/(pages)/cpf/FindByCpfCards/SkeletonCpfCard'
+import { CardsSkeletonUsersCpf } from '@/src/app/(pages)/cpf/FindByCpfCards/SkeletonCpfCard'
 import { ContainerForm } from '@/src/components/form/ContainerForm'
 import MaskInput from '@/src/components/form/InputMask'
 import { toastError } from '@/src/components/Notification/Notifications'
@@ -16,7 +16,7 @@ import {
 import { CpfResponseBySpcType, FindCompleteCpfType, FindSimpleCpfType } from '@/src/services/types'
 import { FindCnsByCpfType } from '@/src/services/types/FindCnsByCpfType'
 import { validateCpf } from '@/src/services/utils/validateCpf'
-import { Group, Radio, Grid, Flex } from '@mantine/core'
+import { Flex, Grid, Group, Radio } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useState } from 'react'
 
@@ -79,6 +79,7 @@ export function Form() {
           setDataSpc(undefined)
           form.setValues({ cpf: '' })
         }}
+        pageTitle="CPF"
       >
         <Grid grow>
           <Grid.Col span={8}>
@@ -110,7 +111,7 @@ export function Form() {
         </Flex>
       </ContainerForm>
 
-      {isLoading && <CardSkeletonCpf />}
+      {isLoading && <CardsSkeletonUsersCpf />}
       {dataCpfSimple && <SimpleCpfCard data={dataCpfSimple} />}
       {dataCpfComplete && <CompleteCpfCard data={dataCpfComplete} />}
       {dataCns && <CnsByCpfCard data={dataCns} />}
